@@ -22,9 +22,11 @@ TCPsocket ConnectLocal(int port) {
   IPaddress ip;
   TCPsocket tcpsock;
 
-  if (SDLNet_ResolveHost(&ip, "localhost", port) == -1) {
-    fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-    abort();
+  if (SDLNet_ResolveHost(&ip, "dockerhost", port) == -1) {
+    if (SDLNet_ResolveHost(&ip, "localhost", port) == -1) {
+      fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+      abort();
+    }
   }
 
   tcpsock = SDLNet_TCP_Open(&ip);

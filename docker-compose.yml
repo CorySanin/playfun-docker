@@ -1,0 +1,82 @@
+version: '2'
+
+services:
+   dockerhost:
+      container_name: playfun-dockerhost
+      image: qoomon/docker-host
+      cap_add: ['NET_ADMIN', 'NET_RAW']
+
+
+   playfun-node00:
+      container_name: playfun-node00
+      # image: corysanin/playfun:latest
+      build:
+         context: ./
+         dockerfile: ./Dockerfile
+      command:
+         - "--helper"
+         - "8000"
+      ports:
+         - 8000:8000
+      volumes:
+         - ./config:/playfun/config
+
+   playfun-node01:
+      container_name: playfun-node01
+      build:
+         context: ./
+         dockerfile: ./Dockerfile
+      command:
+         - "--helper"
+         - "8001"
+      ports:
+         - 8001:8001
+      volumes:
+         - ./config:/playfun/config
+
+   playfun-node02:
+      container_name: playfun-node02
+      build:
+         context: ./
+         dockerfile: ./Dockerfile
+      command:
+         - "--helper"
+         - "8002"
+      ports:
+         - 8002:8002
+      volumes:
+         - ./config:/playfun/config
+
+   playfun-node03:
+      container_name: playfun-node03
+      build:
+         context: ./
+         dockerfile: ./Dockerfile
+      command:
+         - "--helper"
+         - "8003"
+      ports:
+         - 8003:8003
+      volumes:
+         - ./config:/playfun/config
+
+   playfun-master:
+      container_name: playfun-master
+      build:
+         context: ./
+         dockerfile: ./Dockerfile
+      command:
+         - "--master"
+         - "8000"
+         - "8001"
+         - "8002"
+         - "8003"
+      volumes:
+         - ./config:/playfun/config
+      depends_on:
+         - dockerhost
+         - playfun-node00
+         - playfun-node01
+         - playfun-node02
+         - playfun-node03
+

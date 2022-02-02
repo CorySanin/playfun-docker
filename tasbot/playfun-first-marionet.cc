@@ -510,7 +510,7 @@ struct PlayFun {
       // if (!i) fprintf(stderr, "REQ: %s\n", req->DebugString().c_str());
     }
     
-    GetAnswers<PlayFunRequest, PlayFunResponse> getanswers(ports_, requests);
+    GetAnswers<PlayFunRequest, PlayFunResponse> getanswers(hostnames_, requests);
     getanswers.Loop();
 
     fprintf(stderr, "GOT ANSWERS.\n");
@@ -581,14 +581,14 @@ struct PlayFun {
   }
 
   // XXX
-  vector<int> ports_;
+  vector<char*> hostnames_;
 
   // Main loop for the master, or when compiled without MARIONET support.
   // Helpers is an array of helper ports, which is ignored unless MARIONET
   // is active.
-  void Master(const vector<int> &helpers) {
+  void Master(const vector<char*> &helpers) {
     // XXX
-    ports_ = helpers;
+    hostnames_ = helpers;
 
     vector<uint8> current_state;
     vector<uint8> current_memory;
@@ -800,25 +800,19 @@ int main(int argc, char *argv[]) {
       pf.Helper(port);
       fprintf(stderr, "helper returned?\n");
     } else if (0 == strcmp(argv[1], "--master")) {
-      vector<int> helpers;
+      vector<char*> helpers;
       for (int i = 2; i < argc; i++) {
-	int hp = atoi(argv[i]);
-	if (!hp) {
-	  fprintf(stderr, 
-		  "Expected a series of helper ports after --master.\n");
-	  abort();
-	}
-	helpers.push_back(hp);
+	      helpers.push_back(argv[i]);
       }
       pf.Master(helpers);
       fprintf(stderr, "master returned?\n");
     }
   } else {
-    vector<int> empty;
+    vector<char*> empty;
     pf.Master(empty);
   }
   #else
-  vector<int> nobody;
+  vector<char*> nobody;
   pf.Master(nobody);
   #endif
 

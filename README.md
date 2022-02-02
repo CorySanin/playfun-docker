@@ -5,8 +5,6 @@ Run Playfun nodes in Docker
 
 Because Playfun runs best in so-called "MARIONET" mode, multiple playfun instances should be managed in some kind of container orchestration tool. I use docker-compose. I have provided an [example docker-compose config](docker-compose.yml).
 
-dockerhost is necessary because otherwise Playfun would need to be provided a list of hostnames along with ports, which is not currently supported.
-
 ## config
 
 The simplest way to configure Playfun is to include all files in a folder that is mounted to `/playfun/config`. Inside `config.txt`, both the game and movie values should be prefixed with `config/`. Here's an example:

@@ -39,7 +39,7 @@ extern void BlockOnSocket(TCPsocket sock);
 
 // Connect to localhost at the given port. Blocks. Returns null on
 // failure.
-extern TCPsocket ConnectLocal(int port);
+extern TCPsocket ConnectLocal(char* hostname);
 
 // Checks whether the error from the last recv is one we should retry
 // on (socket has not actually closed).
@@ -105,13 +105,13 @@ template <class Request, class Response>
 struct GetAnswers {
 
   // Request vector must outlast the object.
-  GetAnswers(const vector<int> &ports,
+  GetAnswers(const vector<char*> &hostnames,
              const vector<Request> &requests)
   : workdone_(0),
     workqueued_(0) {
 
-    for (int i = 0; i < ports.size(); i++) {
-      helpers_.push_back(Helper(ports[i]));
+    for (int i = 0; i < hostnames.size(); i++) {
+      helpers_.push_back(Helper(hostnames[i]));
     }
 
     for (int i = 0; i < requests.size(); i++) {
@@ -248,9 +248,9 @@ struct GetAnswers {
             helper->sock = NULL;
             helper->state = DISCONNECTED;
             term.Advance();
-            fprintf(stderr, "Error reading result from port %d "
+            fprintf(stderr, "Error reading result from hostname %d "
                     "for work #%d!\n",
-                    helper->port,
+                    helper->hostname,
                     workidx);
             FetchWork(helper, workidx);
           }
@@ -282,12 +282,12 @@ struct GetAnswers {
   };
 
   struct Helper {
-    explicit Helper(int port)
-    : port(port),
+    explicit Helper(char* hostname)
+    : hostname(hostname),
       state(DISCONNECTED),
       workidx(-1) {}
     // Host assumed to be localhost.
-    int port;
+    char* hostname;
     State state;
 
     // Index of the work we're doing, if in state WORKING.
@@ -302,7 +302,7 @@ struct GetAnswers {
     CHECK(helper->state == DISCONNECTED);
     helper->state = WORKING;
     helper->workidx = workidx;
-    helper->sock = ConnectLocal(helper->port);
+    helper->sock = ConnectLocal(helper->hostname);
     CHECK(helper->sock);
     // PERF -- could parallelize this with other writes,
     // by waiting until the socket is actually ready.

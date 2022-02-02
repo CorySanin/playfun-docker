@@ -998,7 +998,7 @@ struct PlayFun {
       // if (!i) fprintf(stderr, "REQ: %s\n", req->DebugString().c_str());
     }
 
-    GetAnswers<HelperRequest, PlayFunResponse> getanswers(ports_, requests);
+    GetAnswers<HelperRequest, PlayFunResponse> getanswers(hostnames_, requests);
     getanswers.Loop();
 
     const vector<GetAnswers<HelperRequest, PlayFunResponse>::Work> &work =
@@ -1292,9 +1292,9 @@ struct PlayFun {
   // Main loop for the master, or when compiled without MARIONET support.
   // Helpers is an array of helper ports, which is ignored unless MARIONET
   // is active.
-  void Master(const vector<int> &helpers) {
+  void Master(const vector<char*> &helpers) {
     // XXX
-    ports_ = helpers;
+    hostnames_ = helpers;
 
     string logname = StringPrintf("%s-log.html", game.c_str());
     log = fopen(logname.c_str(), "w");
@@ -1515,7 +1515,7 @@ struct PlayFun {
     }
 
     GetAnswers<HelperRequest, TryImproveResponse>
-      getanswers(ports_, requests);
+      getanswers(hostnames_, requests);
     getanswers.Loop();
 
     const vector<GetAnswers<HelperRequest,
@@ -1796,7 +1796,7 @@ struct PlayFun {
   }
 
   // Ports for the helpers.
-  vector<int> ports_;
+  vector<char*> hostnames_;
 
   // For making SVG.
   vector<Scoredist> distributions;
@@ -1830,34 +1830,27 @@ int main(int argc, char *argv[]) {
   #if MARIONET
   if (argc >= 2) {
     if (0 == strcmp(argv[1], "--helper")) {
-      if (argc < 3) {
-	fprintf(stderr, "Need one port number after --helper.\n");
-	abort();
+      int port = 1985;
+      if (argc >= 3) {
+	      port = atoi(argv[2]);
       }
-      int port = atoi(argv[2]);
       fprintf(stderr, "Starting helper on port %d...\n", port);
       pf.Helper(port);
       fprintf(stderr, "helper returned?\n");
     } else if (0 == strcmp(argv[1], "--master")) {
-      vector<int> helpers;
+      vector<char*> helpers;
       for (int i = 2; i < argc; i++) {
-	int hp = atoi(argv[i]);
-	if (!hp) {
-	  fprintf(stderr,
-		  "Expected a series of helper ports after --master.\n");
-	  abort();
-	}
-	helpers.push_back(hp);
+	      helpers.push_back(argv[i]);
       }
       pf.Master(helpers);
       fprintf(stderr, "master returned?\n");
     }
   } else {
-    vector<int> empty;
+    vector<char*> empty;
     pf.Master(empty);
   }
   #else
-  vector<int> nobody;
+  vector<char*> nobody;
   pf.Master(nobody);
   #endif
 

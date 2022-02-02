@@ -18,12 +18,12 @@ string IPString(const IPaddress &ip) {
                       port);
 }
 
-TCPsocket ConnectLocal(int port) {
+TCPsocket ConnectLocal(char* hostname) {
   IPaddress ip;
   TCPsocket tcpsock;
 
-  if (SDLNet_ResolveHost(&ip, "dockerhost", port) == -1) {
-    if (SDLNet_ResolveHost(&ip, "localhost", port) == -1) {
+  if (SDLNet_ResolveHost(&ip, hostname, 1985) == -1) {
+    if (SDLNet_ResolveHost(&ip, "localhost", 1985) == -1) {
       fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
       abort();
     }

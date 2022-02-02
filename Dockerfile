@@ -22,5 +22,6 @@ RUN apt-get update \
  && ln -sf ./config/config.txt ./config.txt
 
 COPY --from=build-env /playfun/tasbot /playfun
+COPY ./start.sh .
 
-ENTRYPOINT ["./playfun"]
+ENTRYPOINT ["./start.sh"]

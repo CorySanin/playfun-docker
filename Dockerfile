@@ -10,7 +10,7 @@ RUN ./autogen.sh \
  && ./configure \
  && make
 
-FROM debian:bullseye-slim
+FROM debian:bullseye-slim AS deploy
 
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /playfun

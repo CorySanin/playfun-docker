@@ -55,9 +55,4 @@ services:
          - "playfun-node03"
       volumes:
          - ./config:/playfun/config
-      depends_on:
-         - playfun-node00
-         - playfun-node01
-         - playfun-node02
-         - playfun-node03
 

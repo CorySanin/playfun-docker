@@ -14,4 +14,8 @@ game config/game
 movie config/game.fm2
 ```
 
-This will ensure Playfun uses your mounted config directory for all the files it reads and writes.
+This will ensure Playfun uses your mounted config directory for all the files it reads and writes. Make sure each config item ends with a new line!
+
+## running
+
+Assuming a docker-compose configuration, run learnfun first with `docker-compose run --rm playfun-master --learnfun`. Then start playfun with `docker-compose up`.

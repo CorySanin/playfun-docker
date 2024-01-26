@@ -5,8 +5,8 @@ game="${game//$'\r'/}"
 movie=`grep 'movie ' config/config.txt | awk '{print $2}'`
 movie="${movie//$'\r'/}"
 
-if [ "$1" = "--master" ] && [ ! -f "$game.objectives" ]; then
+if [ "$1" = "--learnfun" ]; then
     ./learnfun
+else
+    ./playfun "$@"
 fi
-
-./playfun "$@"

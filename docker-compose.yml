@@ -41,7 +41,7 @@ services:
          - "--helper"
       volumes:
          - ./config:/playfun/config
-
+   
    playfun-master:
       container_name: playfun-master
       build:
@@ -53,6 +53,11 @@ services:
          - "playfun-node01"
          - "playfun-node02"
          - "playfun-node03"
-      volumes:
+               volumes:
          - ./config:/playfun/config
+      depends_on:
+         - "playfun-node00"
+         - "playfun-node01"
+         - "playfun-node02"
+         - "playfun-node03"
 

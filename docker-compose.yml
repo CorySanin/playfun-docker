@@ -53,7 +53,7 @@ services:
          - "playfun-node01"
          - "playfun-node02"
          - "playfun-node03"
-               volumes:
+      volumes:
          - ./config:/playfun/config
       depends_on:
          - "playfun-node00"

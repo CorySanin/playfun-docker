@@ -1003,21 +1003,3 @@ int Util::random() {
   return ::random();
 # endif
 }
-
-namespace {
-/* ensure that random is seeded */
-struct RandomSeed {
-  RandomSeed() {
-# if defined(WIN32) || defined(__MINGW32__)
-    srand((int)time(NULL) ^ getpid());
-# else
-    srandom(time(0) ^ getpid());
-# endif
-    /* run it a bit */
-    for (int i = 0; i < 256; i ++)
-      (void)Util::random();
-  }
-};
-
-RandomSeed randomseed__unused;
-}  // namespace

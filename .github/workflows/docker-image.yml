@@ -145,7 +145,7 @@ jobs:
           images: ${{ env.PIMAGES }}
           tags: ${{ env.PTAGS }}
 
-      - name: Combine JVM images into single manifest
+      - name: Combine images into single manifest
         uses: int128/docker-manifest-create-action@v2
         with:
           push: true
